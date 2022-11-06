@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.separate.fruit.Dao.UsersDao">
+
+    <!--BeseResultMap关联集合映射-->
+    <resultMap id="BaseResultMap" type="com.separate.fruit.entity.Users">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
+        <result column="sign_in_data" jdbcType="DATE" property="signInData"/>
+    </resultMap>
+
+    <!--数据表中的字段名,全表的字段名-->
+    <sql id="Base_Column_List">
+        user_id
+        , user_name, phone, `password`, user_email, sign_in_data
+    </sql>
+
+    <sql id="selectWhereList">
+        <where>
+            <if test="users!= null">
+                <if test="users.userName != null">
+                    user_name like "%"#{users.userName, jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <!--根据主键ID找到对应的数据,并返回结果集-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where user_id = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <!--查询出users表中的所有数据-->
+    <select id="selectAllUsers" resultType="com.separate.fruit.entity.Users" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from users
+        <include refid="selectWhereList"></include>
+        limit #{num,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
+    </select>
+    <!--利用手机号码进行登录-->
+    <select id="UsePhoneLoginFindUser" resultType="com.separate.fruit.entity.Users" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from users
+        where phone = #{phone, jdbcType=VARCHAR}
+        and password = #{password, jdbcType=VARCHAR}
+    </select>
+    <!--利用邮箱辅助进行登录-->
+    <select id="UseEmailLoginFindUser" resultType="com.separate.fruit.entity.Users" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from users
+        where user_email=#{email, jdbcType=VARCHAR}
+    </select>
+
+    <!--只返回用户名和用户id -->
+    <select id="WhereUsers" resultType="com.separate.fruit.entity.Users">
+        select user_id, user_name
+        from users
+    </select>
+    <!-- 查询出用户表的数量 -->
+    <select id="UsersCount" resultType="java.lang.Integer">
+        select count(*) from users
+        <include refid="selectWhereList"></include>
+    </select>
+
+    <!--根据主键删除对应的用户ID数据-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from users
+        where user_id = #{userId,jdbcType=INTEGER}
+    </delete>
+
+
+    <!--向数据库添加数据-->
+    <insert id="insertUser" keyColumn="user_id" keyProperty="userId" parameterType="com.separate.fruit.entity.Users"
+            useGeneratedKeys="true">
+        insert into users (user_name, phone, `password`,
+                           user_email, sign_in_data)
+        values (#{userName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{userEmail,jdbcType=VARCHAR}, #{signInData,jdbcType=DATE})
+    </insert>
+
+    <!--更新数据库中数据-->
+    <update id="editUsers" parameterType="com.separate.fruit.entity.Users">
+        update users
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                `password` = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userEmail != null">
+                user_email = #{userEmail,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
+</mapper>

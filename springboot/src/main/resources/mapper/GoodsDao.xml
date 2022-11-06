@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.separate.fruit.Dao.GoodsDao">
+
+    <!--返回结果集-->
+    <resultMap id="BaseResultMap" type="com.separate.fruit.entity.Goods">
+        <id column="goods_id" jdbcType="INTEGER" property="goodsId"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="price" jdbcType="DOUBLE" property="price"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+        <result column="on_sale" jdbcType="VARCHAR" property="onSale"/>
+        <collection property="goodsType" ofType="com.separate.fruit.entity.GoodsType">
+            <id column="goods_type_id" jdbcType="INTEGER" property="goodsTypeId"/>
+            <result column="goods_type_name" jdbcType="VARCHAR" property="goodsTypeName"></result>
+        </collection>
+    </resultMap>
+
+    <!--数据表字段-->
+    <sql id="Base_Column_List">
+        goods_id
+        , goods_name, goods_img, price, `count`, on_sale
+    </sql>
+
+    <!--判断字段是否为空,如为空则不执行-->
+    <sql id="selectGoodsListWhere">
+        <if test="goods != null">
+            <if test="goods.title != null">goods_name like "%"#{goods.title, jdbcType=VARCHAR}"%"</if>
+            <if test="goods.gId != null">and goods_type = #{goods.gId, jdbcType=INTEGER}</if>
+            <if test="goods.minPrice != null">and price >= #{goods.minPrice,jdbcType=INTEGER}</if>
+            <if test="goods.maxPrice != null">and #{goods.maxPrice,jdbcType=INTEGER} >= price</if>
+            <if test="goods.onSale != null">and on_sale = #{goods.onSale,jdbcType=VARCHAR}</if>
+        </if>
+    </sql>
+
+    <!-- 把所有商品显示出来 -->
+    <select id="AllGoodsLimit" resultType="com.separate.fruit.entity.Goods" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>,
+        gt.goods_type_id,
+        gt.goods_type_name
+        from goods, goods_type gt
+        where
+        <include refid="selectGoodsListWhere"></include>
+        and goods_type = gt.goods_type_id
+        limit #{num,jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+    </select>
+    <!--查询出共有多少条数据 -->
+    <select id="countGoods" parameterType="com.separate.fruit.entity.Goods" resultType="java.lang.Integer">
+        select
+        count(*)
+        from goods
+        where
+        <include refid="selectGoodsListWhere"></include>
+    </select>
+
+    <!-- 利用提供的数据找到对应的数据,然后进行更新操作 -->
+    <select id="findGoodsId" resultType="com.separate.fruit.entity.Goods">
+        select
+        <include refid="Base_Column_List"></include>
+        from goods
+        where
+        goods_id = #{goodsId,jdbcType=INTEGER}
+    </select>
+    <!--  更新数据 -->
+    <update id="updateGoods" parameterType="com.separate.fruit.entity.Goods">
+        update goods
+        <set>
+            <if test="goodsName != null">
+                goods_name = #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsImg != null">
+                goods_img = #{goodsImg,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="count != null">
+                `count` = #{count,jdbcType=INTEGER},
+            </if>
+            <if test="onSale != null">
+                on_sale = #{onSale,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where goods_id=#{goodsId,jdbcType=INTEGER}
+    </update>
+
+    <!--根据提供的id删除数据-->
+    <delete id="deleteKeyIdGoods" parameterType="java.lang.Integer">
+        delete
+        from goods
+        where goods_id = #{goodsId,jdbcType=INTEGER}
+    </delete>
+
+    <!-- 添加数据-->
+    <insert id="insertGoods" keyColumn="goods_id" keyProperty="goodsId"
+            parameterType="com.separate.fruit.entity.Goods">
+        insert into goods
+        (goods_name, goods_img, price,
+         `count`, on_sale, goods_type)
+        values (#{goodsName,jdbcType=VARCHAR}, #{goodsImg,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE},
+                #{count,jdbcType=INTEGER}, #{onSale,jdbcType=VARCHAR}, #{goodsTypeId,jdbcType=INTEGER})
+    </insert>
+
+
+    <!-- 后台方便购物车添加商品 -->
+    <select id="whereGoods" resultMap="BaseResultMap">
+        select goods_id, goods_name, price
+        from goods
+    </select>
+
+</mapper>

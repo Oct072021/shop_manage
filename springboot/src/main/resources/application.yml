@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+#支付宝SDK的基础配置
+alipay:
+  #商户ID
+  appId: 2021000117604115
+  #自己的支付宝私钥
+  privateKey:
+  #自己的公钥
+  publicKey:
+  #支付宝网关
+  gateway: openapi.alipaydev.com
+  #支付完成后需要返回的url映射地址
+  returnUrl: http://localhost:8080/table
+  #异步支付通知
+  notifyUrl: http://localhost:8080
+
+#spring配置
+spring:
+  #数据库的连接配置
+  datasource:
+    username: root
+    password: JUNHAO20001008
+    url: jdbc:mysql://127.0.0.1:3306/shop?serverTimezone=GMT
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #邮箱配置信息
+  mail:
+    #指定需要的smtp服务
+    host: smtp.qq.com
+    #发送方的邮箱
+    username:
+    password:
+
+
+#mybatis映射文件的路径设置,并打印sql语句
+mybatis:
+  configuration:
+    #打印sql语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: classpath:mapper
