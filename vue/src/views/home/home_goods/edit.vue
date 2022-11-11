@@ -29,7 +29,7 @@
         </el-form-item>
 
         <el-form-item>
-            <el-button type="primary" @click="update('form')">修改</el-button>
+            <el-button type="primary" @click="update">修改</el-button>
             <el-button type="danger">取消</el-button>
         </el-form-item>
     </el-form>
@@ -51,9 +51,9 @@
             };
         },
         methods: {
-            update(form) {
+            update() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.form.validate(async (valid) => {
                     if (valid) {
                         const bool = await update(this.goods)
                         if (bool == true) {

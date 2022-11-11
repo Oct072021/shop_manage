@@ -16,7 +16,7 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="search('searchForm')">
+                <el-button type="primary" @click="search">
                     <i class="el-icon-search"></i>
                     查询
                 </el-button>
@@ -50,7 +50,7 @@
 
                 <el-form-item style="margin-left: 260px">
                     <el-button type="danger" @click="addDialog= false">取 消</el-button>
-                    <el-button type="primary" @click="add('addForm')">确 定</el-button>
+                    <el-button type="primary" @click="add">确 定</el-button>
                 </el-form-item>
                 <span>购物车中不扣除商品库存数量,只显示该订单价格</span>
             </el-form>
@@ -154,7 +154,7 @@
 
                 <el-form-item>
                     <el-button type="danger" @click="editDialog = false">取 消</el-button>
-                    <el-button type="primary" @click="update('editForm')">确 定</el-button>
+                    <el-button type="primary" @click="update">确 定</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -219,9 +219,9 @@
         },
         methods: {
             //查询
-            search(form) {
+            search() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.searchForm.validate(async (valid) => {
                     const obj = await findAllShopCar(this.size, this.searchCar)
                     if (obj != null) {
                         that.car = obj.list
@@ -259,9 +259,9 @@
             },
 
             //添加购物车中的数据
-            add(form) {
+            add() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.addForm.validate(async (valid) => {
                     if (valid) {
                         const obj = await add(this.addCar)
                         if (obj != null) {
@@ -313,9 +313,9 @@
                 }
             },
 
-            update(form) {
+            update() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.editForm.validate(async (valid) => {
                     if (valid) {
                         const bool = await update(this.editCar)
                         if (bool == true) {

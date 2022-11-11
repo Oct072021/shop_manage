@@ -30,7 +30,7 @@
             <el-form-item>¥</el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="search('searchForm')">
+                <el-button type="primary" @click="search">
                     <i class="el-icon-search"></i>
                     查询
                 </el-button>
@@ -67,7 +67,7 @@
 
                 <el-form-item style="margin-left: 270px">
                     <el-button type="danger" @click="addDialog = false">取消</el-button>
-                    <el-button type="primary" @click="add('addForm')">确定</el-button>
+                    <el-button type="primary" @click="add">确定</el-button>
                 </el-form-item>
 
             </el-form>
@@ -168,9 +168,9 @@
             }
         },
         methods: {
-            search(form) {
+            search() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.searchForm.validate(async (valid) => {
                     if (valid) {
                         const obj = await findAllGoods(this.size, this.searchGoods)
                         if (obj != null) {
@@ -188,9 +188,9 @@
                 })
             },
 
-            add(form) {
+            add() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.addForm.validate(async (valid) => {
                     if (valid) {
                         const obj = await add(this.addGoods)
                         if (obj != null) {

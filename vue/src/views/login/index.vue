@@ -17,7 +17,7 @@
 
                         <el-form-item>
                             <router-link class="reset" to="/reset">忘记密码?</router-link>
-                            <el-button class="button" @click="login('loginForm')">Login</el-button>
+                            <el-button class="button" @click="login">Login</el-button>
                         </el-form-item>
 
                     </el-form>
@@ -54,9 +54,8 @@
                 'getAdminInfo'
             ]),
 
-            login(form) {
-                console.log(form)
-                this.$refs[form].validate(async valid => {
+            login() {
+                this.$refs.loginForm.validate(async valid => {
                     if (valid) {
                         const obj = await login({params: this.user})
                         console.log(obj.userInfo)

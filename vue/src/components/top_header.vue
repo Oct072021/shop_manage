@@ -51,7 +51,7 @@
             logout() {
                 let that = this
                 this.$confirm("是否退出登录？", "提示", {confirmButtonText: "确定", cancelButtonText: "取消"})
-                    .then((response) => {
+                    .then(() => {
                         localStorage.removeItem("access-username")
                         that.$router.replace({path: '/'})
                     })
@@ -60,7 +60,7 @@
     }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
   .header {
     height: 65px;
     background-color: rgb(50, 64, 87);

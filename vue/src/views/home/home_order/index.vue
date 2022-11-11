@@ -17,7 +17,7 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="search('searchForm')">
+                <el-button type="primary" @click="search">
                     <i class="el-icon-search"></i>
                     查询
                 </el-button>
@@ -54,7 +54,7 @@
 
                 <el-form-item style="margin-left: 260px">
                     <el-button type="danger" @click="addDialog = false">取 消</el-button>
-                    <el-button type="primary" @click="add('addForm')">确 定</el-button>
+                    <el-button type="primary" @click="add">确 定</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -158,7 +158,7 @@
 
                 <el-form-item style="margin-left: 260px">
                     <el-button type="danger" @click="editDialog = false">取 消</el-button>
-                    <el-button type="primary" @click="update('editForm')">确 定</el-button>
+                    <el-button type="primary" @click="update">确 定</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -224,9 +224,9 @@
             }
         },
         methods: {
-            search(form) {
+            search() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.searchForm.validate(async (valid) => {
                     const obj = await findAllOrders(this.size, this.searchOrders)
                     if (obj != null) {
                         that.orders = obj.list
@@ -263,9 +263,9 @@
                 }
             },
 
-            add(form) {
+            add() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.addForm.validate(async (valid) => {
                     if (valid) {
                         const obj = await add(this.addOrders)
                         if (obj != null) {
@@ -313,9 +313,9 @@
                 })
             },
 
-            update(form) {
+            update() {
                 let that = this
-                this.$refs[form].validate(async (valid) => {
+                this.$refs.editForm.validate(async (valid) => {
                     if (valid) {
                         const bool = await update(this.editOrders)
                         if (bool == true) {

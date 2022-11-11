@@ -9,7 +9,7 @@
             let that = this
             this.$alert("登录信息失效", "提示", {
                 confirmButtonText: '确定'
-            }).then((response) => {
+            }).then(() => {
                 localStorage.removeItem("access")
                 that.$router.replace({path: '/'})
             })
