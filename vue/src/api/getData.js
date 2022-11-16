@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const getGoods =
-    () => axios.get("http://localhost:8080/whereGoods")
+    () => axios.get("/api/whereGoods")
         .then(response => {
             if (response.data) {
                 return response.data
@@ -11,7 +11,7 @@ export const getGoods =
         })
 
 export const getUsers =
-    () => axios.get("http://localhost:8080/whereUser")
+    () => axios.get("/api/whereUser")
         .then(response => {
             if (response.data) {
                 return response.data

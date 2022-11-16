@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const findAllTypes =
-    (size, searchTypes) => axios.post('http://localhost:8080/TypeAll' + '/0' + '/' + size, searchTypes)
+    (size, searchTypes) => axios.post('/api/TypeAll' + '/0' + '/' + size, searchTypes)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -11,7 +11,7 @@ export const findAllTypes =
         })
 
 export const add =
-    addTypes => axios.put('http://localhost:8080/addType', addTypes)
+    addTypes => axios.put('/api/addType', addTypes)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -21,7 +21,7 @@ export const add =
         })
 
 export const editById =
-    id => axios.get("http://localhost:8080/findByIdType?id=" + id)
+    id => axios.get("/api/findByIdType?id=" + id)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -31,7 +31,7 @@ export const editById =
         })
 
 export const deleteById =
-    id => axios.delete('http://localhost:8080/deleteType?id=' + id)
+    id => axios.delete('/api/deleteType?id=' + id)
         .then(response => {
             if (response.data) {
                 return true
@@ -41,7 +41,7 @@ export const deleteById =
         })
 
 export const update =
-    editTypes => axios.put("http://localhost:8080/updateType", editTypes)
+    editTypes => axios.put("/api/updateType", editTypes)
         .then(response => {
             if (response.data) {
                 return true

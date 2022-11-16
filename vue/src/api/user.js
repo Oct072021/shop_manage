@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const findAllUser =
-    (size, searchUser) => axios.post('http://localhost:8080/findUserAll' + '/0' + '/' + size, searchUser)
+    (size, searchUser) => axios.post('/api/findUserAll' + '/0' + '/' + size, searchUser)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -11,7 +11,7 @@ export const findAllUser =
         })
 
 export const add =
-    addUser => axios.put('http://localhost:8080/insertUser', addUser)
+    addUser => axios.put('/api/insertUser', addUser)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -21,7 +21,7 @@ export const add =
         })
 
 export const editById =
-    id => axios.get("http://localhost:8080/findById?userId=" + id)
+    id => axios.get("/api/findById?userId=" + id)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -31,7 +31,7 @@ export const editById =
         })
 
 export const deleteById =
-    id => axios.delete('http://localhost:8080/deleteUserById?userId=' + id)
+    id => axios.delete('/api/deleteUserById?userId=' + id)
         .then(response => {
             if (response.data) {
                 return true
@@ -41,7 +41,7 @@ export const deleteById =
         })
 
 export const edit =
-    editUser => axios.put("http://localhost:8080/editUserFindById", editUser)
+    editUser => axios.put("/api/editUserFindById", editUser)
         .then(response => {
             if (response.data) {
                 return response.data

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const findAllOrders =
-    (size, searchOrders) => axios.post('http://localhost:8080/findOrder' + '/0' + '/' + size, searchOrders)
+    (size, searchOrders) => axios.post('/api/findOrder' + '/0' + '/' + size, searchOrders)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -11,7 +11,7 @@ export const findAllOrders =
         })
 
 export const add =
-    addOrders => axios.put('http://localhost:8080/addOrder', addOrders)
+    addOrders => axios.put('/api/addOrder', addOrders)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -21,7 +21,7 @@ export const add =
         })
 
 export const editById =
-    id => axios.get("http://localhost:8080/OrderById?id=" + id)
+    id => axios.get("/api/OrderById?id=" + id)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -31,7 +31,7 @@ export const editById =
         })
 
 export const deleteById =
-    id => axios.delete('http://localhost:8080/deleteOrder?id=' + id)
+    id => axios.delete('/api/deleteOrder?id=' + id)
         .then(response => {
             if (response.data) {
                 return true
@@ -41,7 +41,7 @@ export const deleteById =
         })
 
 export const update =
-    editOrders => axios.put("http://localhost:8080/updateOrderById", editOrders)
+    editOrders => axios.put("/api/updateOrderById", editOrders)
         .then(response => {
             if (response.data) {
                 return true

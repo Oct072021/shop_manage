@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const findAllShopCar =
-    (size, searchCar) => axios.post('http://localhost:8080/shopCart' + '/0' + '/' + size, searchCar)
+    (size, searchCar) => axios.post('/api/shopCart' + '/0' + '/' + size, searchCar)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -11,7 +11,7 @@ export const findAllShopCar =
         })
 
 export const add =
-    addCar => axios.put('http://localhost:8080/addShop', addCar)
+    addCar => axios.put('/api/addShop', addCar)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -21,7 +21,7 @@ export const add =
         })
 
 export const editById =
-    id => axios.get("http://localhost:8080/shopCartById?id=" + id)
+    id => axios.get("/api/shopCartById?id=" + id)
         .then(response => {
             if (response.data) {
                 return response.data
@@ -31,7 +31,7 @@ export const editById =
         })
 
 export const deleteById =
-    id => axios.delete('http://localhost:8080/deleteShopCart?id=' + id)
+    id => axios.delete('/api/deleteShopCart?id=' + id)
         .then(response => {
             if (response.data) {
                 return true
@@ -41,7 +41,7 @@ export const deleteById =
         })
 
 export const update =
-    editShop => axios.put("http://localhost:8080/updateShopCartId", editShop)
+    editShop => axios.put("/api/updateShopCartId", editShop)
         .then(response => {
             if (response.data) {
                 return true
