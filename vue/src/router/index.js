@@ -11,8 +11,20 @@ import home_pie from "@/views/home/home_pie";
 import edit from "@/views/home/home_goods/edit";
 import login from "@/views/login";
 import error from "@/views/error";
+import {verifyToken} from "@/api/verify";
+import {getToken} from "@/api/getData";
 
 Vue.use(VueRouter)
+
+/*这个错误是vue-router内部错误,导致导航跳转问题,
+往同一地址跳转时会报错的情况push和replace 都会导致这个情况的发生*/
+const originalPush = VueRouter.prototype.push
+
+VueRouter.prototype.push = function push(location) {
+
+    return originalPush.call(this, location).catch(err => err)
+
+}
 
 const routes = [
     {
@@ -69,30 +81,23 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
+//验证token是否过期
+router.beforeEach(async (to, from, next) => {
+    //若为登录则无需判断
     if (to.path.startsWith('/')) {
         next()
-    } else {
-        let access = JSON.parse(window.localStorage.getItem('access'))
-        if (access != null) {
-            axios({
-                url: 'http://localhost:8080/verifyToke',
-                type: 'get',
-                headers: {
-                    token: access.token
-                }
-            }).then(response => {
-                if (!response.data) {
-                    console.log("账户失效,验证失败")
-                    next({path: 'error'})
-                }
-            })
-            next()
-        } else {
-            next('/')
+    }
+    let token =getToken()
+    if (token != null) {
+        const res = await verifyToken()
+        if (!res) {
+            console.log("账户失效,验证失败")
+            next({path: 'error'})
         }
+        next()
+    } else {
+        next('/')
     }
 })
-
 
 export default router

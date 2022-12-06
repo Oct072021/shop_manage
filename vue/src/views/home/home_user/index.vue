@@ -7,7 +7,7 @@
             </el-form-item>
 
             <el-form-item class="form_item" style="width: 100px">
-                <el-button type="primary" @click="search('searchForm')">
+                <el-button type="primary" @click="search">
                     <i class="el-icon-search"></i>
                     查询
                 </el-button>
@@ -42,7 +42,7 @@
 
                 <el-form-item style="margin-left: 270px">
                     <el-button type="danger" @click="addDialog=false">取消</el-button>
-                    <el-button type="primary" @click="add('addForm')">确定</el-button>
+                    <el-button type="primary" @click="add">确定</el-button>
                 </el-form-item>
 
             </el-form>
@@ -96,7 +96,7 @@
 
                 <el-form-item style="margin-left: 270px">
                     <el-button type="danger" @click="editDialog = false">取消</el-button>
-                    <el-button type="primary" @click="edit('editForm')">确定</el-button>
+                    <el-button type="primary" @click="edit">确定</el-button>
                 </el-form-item>
 
             </el-form>
@@ -110,7 +110,7 @@
 
 <script>
     import {add, deleteById, edit, editById, findAllUser} from "@/api/user";
-    import {page} from "@/api/page";
+    import {userPage} from "@/api/page";
 
     export default {
         name: "home_user",
@@ -142,41 +142,37 @@
         },
         methods: {
             //查询
-            search(form) {
-                let that = this
-                this.$refs[form].validate(async (valid) => {
+            search() {
+                this.$refs.searchForm.validate(async valid => {
                     if (valid) {
-                        const obj = await findAllUser(this.size, this.searchUser)
-                        console.log(obj)
-                        if (obj != null) {
-                            that.user = obj.list
-                            that.total = obj.num
-                            that.$message({
+                        const res = await findAllUser(this.size, this.searchUser)
+                        if (res.status === 200) {
+                            this.user = res.data.list
+                            this.total = res.data.num
+                            this.$message({
                                 message: '查询成功',
                                 type: 'success'
                             })
                         } else {
-                            that.$message.error('哎呀!服务器出现错了')
+                            this.$message.error('哎呀!服务器出现错了')
                         }
                     }
                 })
             },
 
             //添加用户
-            add(form) {
-                let that = this
-                this.$refs[form].validate(async (valid) => {
+            add() {
+                this.$refs.addForm.validate(async valid => {
                     if (valid) {
-                        const obj = await add(this.addUser)
-                        console.log(obj)
-                        if (obj != null) {
-                            that.$message({
+                        const res = await add(this.addUser)
+                        if (res.status === 200) {
+                            this.$message({
                                 message: '添加用户成功',
                                 type: 'success'
                             })
                             location.reload()
                         } else {
-                            that.$message.error('添加失败！')
+                            this.$message.error('添加失败！')
                         }
                     }
                 })
@@ -184,59 +180,49 @@
 
             //根据id查询用户数据并渲染
             async editById(obj) {
-                console.log(obj)
-                let that = this
-                const object = await editById(obj.userId)
-                if (object != null) {
-                    that.editUser = object
-                    that.editDialog = true
-                    that.$message({
-                        message: '为你找到' + obj.userName + '的详细信息',
-                        type: 'success'
-                    });
+                this.editDialog = true
+                const res = await editById(obj.userId)
+                if (res.status === 200) {
+                    this.editUser = res.data
                 } else {
-                    that.$message.error('查询失败!')
-                    that.edituser = false
+                    this.$message.error('错了，丢失数据!')
+                    this.edituser = false
                 }
             },
 
             //删除用户
             deleteById(obj) {
-                console.log(obj)
-                let that = this
                 this.$confirm('是否确认删除' + obj.userName + '?', 'delete', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                 }).then(async () => {
-                    const object = await deleteById(obj.userId)
-                    if (object == true) {
-                        that.$alert(obj.userName + '删除成功!', '删除数据', {
+                    const res = await deleteById(obj.userId)
+                    if (res.status === 200) {
+                        await this.$alert(obj.userName + '删除成功!', '删除数据', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 location.reload()
                             }
                         })
                     } else {
-                        that.$alert("删除失败!")
+                        await this.$alert("删除失败!")
                     }
                 })
             },
 
             //修改用户信息
-            edit(form) {
-                console.log(form)
-                let that = this
-                this.$refs[form].validate(async (valid) => {
+            edit() {
+                this.$refs.editForm.validate(async valid => {
                     if (valid) {
-                        const obj = await edit(this.editUser)
-                        if (obj != null) {
-                            that.$message({
+                        const res = await edit(this.editUser)
+                        if (res.status === 200) {
+                            this.$message({
                                 message: '修改数据成功!',
                                 type: 'success'
                             })
                             location.reload()
                         } else {
-                            that.$message.error('修改用户数据失败,请检查下手机或者邮箱!')
+                            this.$message.error('修改用户数据失败,请检查下手机或者邮箱!')
                         }
                     }
                 })
@@ -244,28 +230,25 @@
 
             //分页
             async page(currentPage) {
-                let that = this
-                const obj = await page(currentPage, this.size, this.user)
-                if (obj != null) {
-                    that.user = obj.list
+                const res = await userPage(currentPage, this.size, this.user)
+                if (res.status === 200) {
+                    this.user = res.data.list
                 }
             }
         },
         //初始化数据，渲染
         async created() {
-            let that = this
-            const obj = await findAllUser(this.size, this.searchUser)
-            console.log(obj)
-            if (obj != null) {
-                that.user = obj.list
-                that.total = obj.num
-                that.loading = false
-                that.$message({
+            const res = await findAllUser(this.size, this.searchUser)
+            if (res.status === 200) {
+                this.user = res.data.list
+                this.total = res.data.num
+                this.loading = false
+                this.$message({
                     message: '加载数据成功!',
                     type: 'success'
                 })
             } else {
-                that.$message.error('错了，服务器与服务端丢失了!')
+                this.$message.error('错了，服务器与服务端丢失了!')
             }
         }
     }

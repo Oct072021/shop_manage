@@ -30,7 +30,7 @@
 
         <el-form-item>
             <el-button type="primary" @click="update">修改</el-button>
-            <el-button type="danger">取消</el-button>
+            <el-button type="danger" @click="back">取消</el-button>
         </el-form-item>
     </el-form>
 </template>
@@ -52,21 +52,24 @@
         },
         methods: {
             update() {
-                let that = this
-                this.$refs.form.validate(async (valid) => {
+                this.$refs.form.validate(async valid => {
                     if (valid) {
-                        const bool = await update(this.goods)
-                        if (bool == true) {
-                            that.$alert(that.goods.goodsName + '修改成功！', '修改数据', {
+                        const res = await update(this.goods)
+                        if (res.status === 200) {
+                            await this.$alert(this.goods.goodsName + '修改成功！', '修改数据', {
                                 confirmButtonText: '确定',
                                 callback: action => {
                                     //跳转到/table
-                                    that.$router.push('goods')
+                                    this.$router.push('goods')
                                 }
                             })
                         }
                     }
                 })
+            },
+
+            back() {
+                this.$router.push('goods')
             },
 
             handleChange(file, fileList) {
@@ -79,10 +82,9 @@
         },
         async created() {
             let id = this.$route.query.id;
-            let that = this;
-            const obj = await findGoodsById(id)
-            if (obj != null) {
-                that.goods = obj
+            const res = await findGoodsById(id)
+            if (res.status === 200) {
+                this.goods = res.data
             }
         },
     };

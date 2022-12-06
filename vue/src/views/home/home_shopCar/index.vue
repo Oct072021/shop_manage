@@ -167,7 +167,7 @@
 <script>
     import {add, deleteById, editById, findAllShopCar, update} from "@/api/shopCar";
     import {getGoods, getUsers} from "@/api/getData";
-    import {page} from "@/api/page";
+    import {shopCartPage} from "@/api/page";
 
     export default {
         name: "home_shopCar",
@@ -220,58 +220,56 @@
         methods: {
             //查询
             search() {
-                let that = this
-                this.$refs.searchForm.validate(async (valid) => {
-                    const obj = await findAllShopCar(this.size, this.searchCar)
-                    if (obj != null) {
-                        that.car = obj.list
-                        that.total = obj.num
-                        that.$message({
-                            message: '成功为您查询到以下数据!',
-                            type: 'success'
-                        });
-                    } else {
-                        that.$message.error('错了,查询失败!')
+                this.$refs.searchForm.validate(async valid => {
+                    if (valid) {
+                        const res = await findAllShopCar(this.size, this.searchCar)
+                        if (res.status === 200) {
+                            this.car = res.data.list
+                            this.total = res.data.num
+                            this.$message({
+                                message: '成功为您查询到以下数据!',
+                                type: 'success'
+                            });
+                        } else {
+                            this.$message.error('错了,查询失败!')
+                        }
                     }
                 })
             },
 
             //选择列表中显示用户
             async getGoods() {
-                let that = this
-                const obj = await getGoods()
-                if (obj != null) {
-                    that.goods = obj
+                const res = await getGoods()
+                if (res.status === 200) {
+                    this.goods = res.data
                 } else {
-                    that.$message.error('错了，查询失败!')
+                    this.$message.error('错了，查询失败!')
                 }
             },
 
             //选择列表中显示商品列表
             async getUser() {
-                let that = this
-                const obj = await getUsers()
-                if (obj != null) {
-                    that.users = obj
+                const res = await getUsers()
+                if (res.status === 200) {
+                    this.users = res.data
                 } else {
-                    that.$message.error('错了，查询失败!')
+                    this.$message.error('错了，查询失败!')
                 }
             },
 
             //添加购物车中的数据
             add() {
-                let that = this
-                this.$refs.addForm.validate(async (valid) => {
+                this.$refs.addForm.validate(async valid => {
                     if (valid) {
-                        const obj = await add(this.addCar)
-                        if (obj != null) {
-                            that.$message({
+                        const res = await add(this.addCar)
+                        if (res.status === 200) {
+                            this.$message({
                                 message: '添加成功啦!',
                                 type: 'success'
                             })
                             location.reload()
                         } else {
-                            that.$message.error('错了，添加数据失败!');
+                            this.$message.error('错了，添加数据失败!');
                         }
                     }
                 })
@@ -279,16 +277,16 @@
 
             //删除购物车
             deleteById(obj) {
-                let that = this
+                console.log(obj);
                 //弹出对话框
-                this.$confirm('是否确定删除' + obj.title + '?', '删除数据', {
+                this.$confirm('是否确定删除' + obj.shopCartId + '号购物车?', '删除数据', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                    const bool = await deleteById(obj.shopCartId)
-                    if (bool == true) {
-                        that.$alert(obj.name + '删除成功!', '删除数据', {
+                    const res = await deleteById(obj.shopCartId)
+                    if (res.status === 200) {
+                        await this.$alert(obj.shopCartId + '号购物删除成功!', '删除数据', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 //重载界面,刷新页面数据
@@ -296,36 +294,34 @@
                             }
                         })
                     } else {
-                        that.$message.error('错了，删除失败!');
+                        this.$message.error('错了，删除失败!');
                     }
                 })
             },
 
             //编辑购物车
             async editById(obj) {
-                let that = this
                 this.editDialog = true
-                const object = await editById(obj.shopCartId)
-                if (object != null) {
-                    that.editCar = obj
+                const res = await editById(obj.shopCartId)
+                if (res.status === 200) {
+                    this.editCar = res.data
                 } else {
-                    that.$message.error('错了，丢失数据!');
+                    this.$message.error('错了，丢失数据!');
                 }
             },
 
             update() {
-                let that = this
-                this.$refs.editForm.validate(async (valid) => {
+                this.$refs.editForm.validate(async valid => {
                     if (valid) {
-                        const bool = await update(this.editCar)
-                        if (bool == true) {
-                            that.$message({
+                        const res = await update(this.editCar)
+                        if (res.status === 200) {
+                            this.$message({
                                 message: '修改成功啦!',
                                 type: 'success'
                             })
                             location.reload()
                         } else {
-                            that.$message.error('错了,修改失败!');
+                            this.$message.error('错了,修改失败!');
                         }
                     }
                 })
@@ -333,26 +329,25 @@
 
             //分页事件的处理
             async page(currentPage) {
-                let that = this
-                const obj = await page(currentPage, this.size, this.searchCar)
-                if (obj != null) {
-                    that.car = obj.list
+                const res = await shopCartPage(currentPage, this.size, this.searchCar)
+                if (res.status === 200) {
+                    this.car = res.data.list
                 }
             }
         },
+
         async created() {
-            let that = this
-            const obj = await findAllShopCar(this.size, this.searchCar)
-            if (obj != null) {
-                that.car = obj.list
-                that.total = obj.num
-                that.loading = false
-                that.$message({
+            const res = await findAllShopCar(this.size, this.searchCar)
+            if (res.status === 200) {
+                this.car = res.data.list
+                this.total = res.data.num
+                this.loading = false
+                this.$message({
                     message: '加载数据成功啦!',
                     type: 'success'
                 });
             } else {
-                that.$message.error('错了，服务器与服务端丢失,请检查一下网络!')
+                this.$message.error('错了，服务器与服务端丢失,请检查一下网络!')
             }
         }
     }

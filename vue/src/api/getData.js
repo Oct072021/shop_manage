@@ -1,21 +1,22 @@
-import axios from "axios";
+import request from "@/utils/request";
 
 export const getGoods =
-    () => axios.get("/api/whereGoods")
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    () => {
+        return request({
+            url: '/whereGoods',
+            method: 'get'
         })
+    }
 
 export const getUsers =
-    () => axios.get("/api/whereUser")
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    () => {
+        return request({
+            url: 'whereUser',
+            method: 'get'
         })
+    }
+
+export const getToken =
+    () => {
+        return window.localStorage.getItem("token")
+    }

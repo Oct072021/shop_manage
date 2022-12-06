@@ -58,7 +58,7 @@
                 </el-form-item>
 
                 <el-form-item label="商品数量">
-                    <el-input-number v-model="addGoods.count" min="0" style="width: 370px"></el-input-number>
+                    <el-input-number v-model="addGoods.count" :min="0" style="width: 370px"></el-input-number>
                 </el-form-item>
 
                 <el-form-item label="商品价格">
@@ -131,7 +131,7 @@
 
 <script>
     import {findAllGoods, add, deleteById} from "@/api/goods";
-    import {page} from "@/api/page";
+    import {goodsPage} from "@/api/page";
 
     export default {
         name: "home_goods",
@@ -169,38 +169,38 @@
         },
         methods: {
             search() {
-                let that = this
                 this.$refs.searchForm.validate(async (valid) => {
                     if (valid) {
-                        const obj = await findAllGoods(this.size, this.searchGoods)
-                        if (obj != null) {
-                            that.goods = obj.list
-                            that.total = obj.num
-                            that.loading = false
-                            that.$message({
+                        const res = await findAllGoods(this.size, this.searchGoods)
+                        if (res.status === 200) {
+                            this.goods = res.data.list
+                            this.total = res.data.num
+                            this.loading = false
+                            this.$message({
                                 message: '查询成功!',
                                 type: 'success'
                             })
                         } else {
-                            that.$message.error('服务器与服务端丢失,请检查一下网络!')
+                            this.$message.error('服务器与服务端丢失,请检查一下网络!')
                         }
                     }
                 })
             },
 
             add() {
-                let that = this
                 this.$refs.addForm.validate(async (valid) => {
                     if (valid) {
-                        const obj = await add(this.addGoods)
-                        if (obj != null) {
-                            that.$message({
+                        console.log(this.addGoods)
+                        const res = await add(this.addGoods)
+                        console.log(res)
+                        if (res.status === 200) {
+                            this.$message({
                                 message: '添加商品成功',
                                 type: 'success'
                             });
                             location.reload()
                         } else {
-                            that.$message.error('错了哦，添加商品数据失败');
+                            this.$message.error('错了哦，添加商品数据失败');
                         }
                     }
                 })
@@ -211,18 +211,16 @@
             },
 
             deleteById(obj) {
-                console.log(obj)
-                let that = this
                 //弹出对话框
-                this.$confirm('是否确定删除' + obj.title + '?', '删除数据', {
+                this.$confirm('是否确定删除' + obj.goodsName + '?', '删除数据', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                    const object = await deleteById(obj.goodsId)
+                    const res = await deleteById(obj.goodsId)
                     //向后端传数据并删除
-                    if (object == true) {
-                        that.$alert(obj.goodsName + '删除成功!', '删除数据', {
+                    if (res.status === 200) {
+                        await this.$alert(obj.goodsName + '删除成功!', '删除数据', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 //重载界面,刷新页面数据
@@ -230,7 +228,7 @@
                             }
                         })
                     } else {
-                        that.$alert("删除失败!")
+                        await this.$alert("删除失败!")
                     }
                 }).catch(() => {
 
@@ -238,25 +236,24 @@
             },
 
             async page(currentPage) {
-                const obj = await page(currentPage, this.size, this.searchGoods)
-                if (obj != null) {
-                    this.goods = obj.list
+                const res = await goodsPage(currentPage, this.size, this.searchGoods)
+                if (res .status===200) {
+                    this.goods = res.data.list
                 }
             },
         },
         async created() {
-            let that = this
-            const obj = await findAllGoods(this.size, this.searchGoods)
-            if (obj != null) {
-                that.goods = obj.list
-                that.total = obj.num
-                that.loading = false
-                that.$message({
+            const res = await findAllGoods(this.size, this.searchGoods)
+            if (res.status === 200) {
+                this.goods = res.data.list
+                this.total = res.data.num
+                this.loading = false
+                this.$message({
                     message: '查询成功!',
                     type: 'success'
                 })
             } else {
-                that.$message.error('服务器与服务端丢失,请检查一下网络!')
+                this.$message.error('服务器与服务端丢失,请检查一下网络!')
             }
         }
     }

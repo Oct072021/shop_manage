@@ -1,9 +1,10 @@
-import axios from "axios";
+import request from "@/utils/request";
 
 export const login =
-    user => axios.get("/api/UsePhoneLogin", user)
-        .then(response => {
-            if (response.data !== null) {
-                return {code: 200, userInfo: response.data};
-            }
+    data => {
+        return request({
+            url: '/UsePhoneLogin',
+            method: 'get',
+            params: data,
         })
+    }

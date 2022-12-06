@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {getToken} from "@/api/getData";
 
 Vue.use(Vuex)
 
@@ -7,7 +8,7 @@ const SAVE_ADMIN_INFO = 'SAVE_ADMIN_INFO'
 
 export default new Vuex.Store({
     state: {
-        adminInfo: null
+        adminInfo: null,
     },
     getters: {},
     mutations: {

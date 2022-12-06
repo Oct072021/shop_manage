@@ -57,12 +57,12 @@
             login() {
                 this.$refs.loginForm.validate(async valid => {
                     if (valid) {
-                        const obj = await login({params: this.user})
-                        console.log(obj.userInfo)
-                        if (obj.code === 200) {
-                            await this.getAdminInfo(obj.userInfo)
-                            localStorage.setItem("access", JSON.stringify(obj.userInfo))
-                            await this.$router.replace({path: '/home/id=' + obj.userInfo.userId + '/'})
+                        const res = await login(this.user)
+                        if (res.status === 200) {
+                            await this.getAdminInfo(res.data)
+                            localStorage.setItem("access", JSON.stringify(res.data))
+                            localStorage.setItem("token", JSON.stringify(res.data.token))
+                            await this.$router.replace({path: '/home/id=' + res.data.userId + '/'})
                         }
                     }
                 })
@@ -149,11 +149,11 @@
         }
       }
 
-      .main{
+      .main {
         background: url("../../../public/images/front/login/Christmas_Trees.png") no-repeat;
         background-size: 100% 100%;
 
-        .title{
+        .title {
           font-weight: 600;
           font-size: 20px;
           position: absolute;

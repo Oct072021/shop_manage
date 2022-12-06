@@ -1,51 +1,46 @@
-import axios from "axios";
+import request from "@/utils/request";
 
 export const findAllShopCar =
-    (size, searchCar) => axios.post('/api/shopCart' + '/0' + '/' + size, searchCar)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    (size, searchCar) => {
+        return request({
+            url: `/shopCart/0/${size}`,
+            method: 'post',
+            data: searchCar
         })
+    }
 
 export const add =
-    addCar => axios.put('/api/addShop', addCar)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    addCar => {
+        return request({
+            url: `/addShop`,
+            method: 'put',
+            data: addCar
         })
+    }
 
 export const editById =
-    id => axios.get("/api/shopCartById?id=" + id)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    id => {
+        return request({
+            url: '/shopCartById',
+            method: 'get',
+            params: {id}
         })
+    }
 
 export const deleteById =
-    id => axios.delete('/api/deleteShopCart?id=' + id)
-        .then(response => {
-            if (response.data) {
-                return true
-            } else {
-                return false
-            }
+    id => {
+        return request({
+            url: `/deleteShopCart`,
+            method: 'delete',
+            params: {id}
         })
+    }
 
 export const update =
-    editShop => axios.put("/api/updateShopCartId", editShop)
-        .then(response => {
-            if (response.data) {
-                return true
-            } else {
-                return false
-            }
+    editShop => {
+        return request({
+            url: `/updateShopCartId`,
+            method: 'put',
+            data: editShop
         })
+    }

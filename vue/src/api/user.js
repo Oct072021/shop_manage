@@ -1,51 +1,46 @@
-import axios from "axios";
+import request from "@/utils/request";
 
 export const findAllUser =
-    (size, searchUser) => axios.post('/api/findUserAll' + '/0' + '/' + size, searchUser)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    (size, searchUser) => {
+        return request({
+            url: `/findUserAll/0/${size}`,
+            method: 'post',
+            data: searchUser
         })
+    }
 
 export const add =
-    addUser => axios.put('/api/insertUser', addUser)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    addUser => {
+        return request({
+            url: `/insertUser`,
+            method: 'put',
+            data: addUser
         })
+    }
 
 export const editById =
-    id => axios.get("/api/findById?userId=" + id)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    id => {
+        return request({
+            url: `/findById`,
+            method: 'get',
+            params: {userId: id}
         })
+    }
 
 export const deleteById =
-    id => axios.delete('/api/deleteUserById?userId=' + id)
-        .then(response => {
-            if (response.data) {
-                return true
-            } else {
-                return false
-            }
+    id => {
+        return request({
+            url: `/deleteUserById`,
+            method: 'delete',
+            params: {userId: id}
         })
+    }
 
 export const edit =
-    editUser => axios.put("/api/editUserFindById", editUser)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    editUser => {
+        return request({
+            url: `/editUserFindById`,
+            method: 'put',
+            data: editUser
         })
+    }

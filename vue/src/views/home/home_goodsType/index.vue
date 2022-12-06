@@ -80,7 +80,7 @@
 
 <script>
     import {findAllTypes, add, editById, deleteById, update} from "@/api/goodsType";
-    import {page} from "@/api/page";
+    import {goodsTypePage} from "@/api/page";
 
     export default {
         name: "home_goodsType",
@@ -115,60 +115,59 @@
         },
         methods: {
             search() {
-                let that = this
-                this.$refs.searchForm.validate(async (valid) => {
-                    const obj = await findAllTypes(this.size, this.searchTypes)
-                    if (obj != null) {
-                        that.types = obj.list
-                        that.total = obj.num
-                        that.$message({
-                            message: '成功为您查询到以下数据!',
-                            type: 'success'
-                        })
-                    } else {
-                        that.$message.error('错了，查询失败!')
+                this.$refs.searchForm.validate(async valid => {
+                    if (valid) {
+                        const res = await findAllTypes(this.size, this.searchTypes)
+                        if (res.status === 200) {
+                            this.types = res.data.list
+                            this.total = res.data.num
+                            this.$message({
+                                message: '成功为您查询到以下数据!',
+                                type: 'success'
+                            })
+                        } else {
+                            this.$message.error('错了，查询失败!')
+                        }
                     }
                 })
             },
 
             add() {
-                let that = this
-                this.$refs.addForm.validate(async (valid) => {
-                    const obj = await add(this.addTypes)
-                    if (obj != null) {
-                        that.$message({
-                            message: '添加成功啦!',
-                            type: 'success'
-                        })
-                        location.reload()
-                    } else {
-                        that.$message.error('错了，添加数据失败!');
+                this.$refs.addForm.validate(async valid => {
+                    if (valid) {
+                        const res = await add(this.addTypes)
+                        if (res.status === 200) {
+                            this.$message({
+                                message: '添加成功啦!',
+                                type: 'success'
+                            })
+                            location.reload()
+                        } else {
+                            this.$message.error('错了，添加数据失败!');
+                        }
                     }
                 })
             },
 
             async editById(obj) {
-                let that = this
                 this.editDialog = true
-                const object = await editById(obj.goodsTypeId)
-                if (object != null) {
-                    that.editTypes = object
+                const res = await editById(obj.goodsTypeId)
+                if (res.status === 200) {
+                    this.editTypes = res.data
                 } else {
-                    that.$message.error('错了哦，丢失数据');
+                    this.$message.error('错了哦，丢失数据');
                 }
             },
 
             deleteById(obj) {
-                console.log(obj)
-                let that = this
-                this.$confirm('是否确定删除' + obj.title + '?', '删除数据', {
+                this.$confirm('是否确定删除' + obj.goodsTypeName + '?', '删除数据', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                    const bool = await deleteById(obj.goodsTypeId)
-                    if (bool == true) {
-                        that.$alert(obj.name + '删除成功!', '删除数据', {
+                    const res = await deleteById(obj.goodsTypeId)
+                    if (res.status === 200) {
+                        await this.$alert(obj.goodsTypeName + '删除成功!', '删除数据', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 //重载界面,刷新页面数据
@@ -180,44 +179,42 @@
             },
 
             update() {
-                let that = this
-                this.$refs.editForm.validate(async (valid) => {
+                this.$refs.editForm.validate(async valid => {
                     if (valid) {
-                        const bool = await update(this.editTypes)
-                        if (bool == true) {
-                            that.$message({
+                        const res = await update(this.editTypes)
+                        if (res.status === 200) {
+                            this.$message({
                                 message: '修改成功啦!',
                                 type: 'success'
                             })
                             location.reload()
                         } else {
-                            that.$message.error('错了,修改失败');
+                            this.$message.error('错了,修改失败');
                         }
                     }
                 })
             },
 
             async page(currentPage) {
-                let that = this
-                const obj = await page(currentPage, this.size, this.searchTypes)
-                if (obj != null) {
-                    that.types = obj.list
+                const res = await goodsTypePage(currentPage, this.size, this.searchTypes)
+                if (res.status === 200) {
+                    this.types = res.data.list
                 }
             }
         },
+
         async created() {
-            let that = this
-            const obj = await findAllTypes(this.size, this.searchTypes)
-            if (obj != null) {
-                that.types = obj.list
-                that.total = obj.num
-                that.loading = false
-                that.$message({
+            const res = await findAllTypes(this.size, this.searchTypes)
+            if (res.status === 200) {
+                this.types = res.data.list
+                this.total = res.data.num
+                this.loading = false
+                this.$message({
                     message: '加载数据成功!',
                     type: 'success'
                 })
             } else {
-                that.$message.error('服务器与服务端丢失,请检查一下网络!')
+                this.$message.error('服务器与服务端丢失,请检查一下网络!')
             }
         }
     }

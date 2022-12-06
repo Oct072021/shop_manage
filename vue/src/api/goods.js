@@ -1,51 +1,46 @@
-import axios from "axios";
+import request from "@/utils/request";
 
 export const findAllGoods =
-    (size, searchGoods) => axios.post('/api/goods' + '/0' + '/' + size, searchGoods)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    (size, searchGoods) => {
+        return request({
+            url: `/goods/0/${size}`,
+            method: 'post',
+            data: searchGoods
         })
+    }
 
 export const add =
-    addGoods => axios.put('/api/addGoods', addGoods)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    addGoods => {
+        return request({
+            url: '/addGoods',
+            method: 'put',
+            data: addGoods
         })
+    }
 
 export const deleteById =
-    id => axios.delete('/api/deleteGoods?id=' + id)
-        .then(response => {
-            if (response.data) {
-                return true
-            } else {
-                return false
-            }
+    id => {
+        return request({
+            url: '/deleteGoods',
+            method: 'delete',
+            params: {id}
         })
+    }
 
 export const update =
-    goods => axios.put("/api/updateGoods", goods)
-        .then(response => {
-            if (response.data) {
-                return true
-            } else {
-                return false
-            }
+    goods => {
+        return request({
+            url: '/updateGoods',
+            method: 'put',
+            data: goods
         })
+    }
 
 export const findGoodsById =
-    id => axios.get("/api/findGoods?id=" + id)
-        .then(response => {
-            if (response.data) {
-                return response.data
-            } else {
-                return null
-            }
+    id => {
+        return request({
+            url: '/findGoods',
+            method: 'get',
+            params: {id}
         })
+    }
