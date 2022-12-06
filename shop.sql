@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 06/12/2022 02:50:27
+ Date: 06/12/2022 18:21:41
 */
 
 SET NAMES utf8mb4;
@@ -34,15 +34,6 @@ CREATE TABLE `goods`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of goods
--- ----------------------------
-INSERT INTO `goods` VALUES (29, 'RTX 3090', '/images/front/numberCode/3090Ti.jpg', 9999.00, 10, 'yes', 1);
-INSERT INTO `goods` VALUES (31, 'RTX 3090Ti', '/images/front/numberCode/3090.jpg', 10999.00, 20, 'yes', 1);
-INSERT INTO `goods` VALUES (32, 'RTX 4080', '/images/front/numberCode/4080.jpg', 16999.00, 5, 'yes', 1);
-INSERT INTO `goods` VALUES (33, 'RTX 4090', '/images/front/numberCode/4090.jpg', 20999.00, 0, 'no', 1);
-INSERT INTO `goods` VALUES (34, 'GTX 1050 Ti', '/images/front/numberCode/1050 Ti.jpg', 1099.00, 6, 'yes', 1);
-
--- ----------------------------
 -- Table structure for goods_type
 -- ----------------------------
 DROP TABLE IF EXISTS `goods_type`;
@@ -51,16 +42,6 @@ CREATE TABLE `goods_type`  (
   `goods_type_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品类型的名字',
   INDEX `goods_type_id`(`goods_type_id` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of goods_type
--- ----------------------------
-INSERT INTO `goods_type` VALUES (1, '数码产品');
-INSERT INTO `goods_type` VALUES (2, '生活用品');
-INSERT INTO `goods_type` VALUES (3, '食品饮料');
-INSERT INTO `goods_type` VALUES (5, '衣装服饰');
-INSERT INTO `goods_type` VALUES (6, '水果蔬菜');
-INSERT INTO `goods_type` VALUES (22, '线上充值');
 
 -- ----------------------------
 -- Table structure for order
@@ -81,12 +62,6 @@ CREATE TABLE `order`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of order
--- ----------------------------
-INSERT INTO `order` VALUES (15, 16, 32, 2, 33998.00, 'xxx');
-INSERT INTO `order` VALUES (16, 20, 29, 1, 9999.00, 'xxxx');
-
--- ----------------------------
 -- Table structure for shop_cart
 -- ----------------------------
 DROP TABLE IF EXISTS `shop_cart`;
@@ -104,12 +79,6 @@ CREATE TABLE `shop_cart`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of shop_cart
--- ----------------------------
-INSERT INTO `shop_cart` VALUES (18, 16, 31, 1, 10999.00);
-INSERT INTO `shop_cart` VALUES (19, 20, 33, 2, 41998.00);
-
--- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
@@ -124,11 +93,5 @@ CREATE TABLE `users`  (
   UNIQUE INDEX `phone`(`phone` ASC) USING BTREE COMMENT '手机号码唯一性',
   UNIQUE INDEX `user_email`(`user_email` ASC) USING BTREE COMMENT '邮箱的唯一性'
 ) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of users
--- ----------------------------
-INSERT INTO `users` VALUES (16, '123', '123', '123', '123', '2022-09-11');
-INSERT INTO `users` VALUES (20, '1234', '1234', '1234', '1234', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
