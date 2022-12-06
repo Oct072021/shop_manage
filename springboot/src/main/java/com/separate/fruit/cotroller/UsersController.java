@@ -34,7 +34,7 @@ public class UsersController {
      * @return
      */
     @RequestMapping("findById")
-    public Users findByIdUsers(Integer userId) {
+    public Users findUserById(Integer userId) {
         return this.usersService.selectByUserId(userId);
     }
 
@@ -54,7 +54,7 @@ public class UsersController {
      * 添加用户
      */
     @PutMapping("insertUser")
-    public boolean insertUseers(@RequestBody Users users) {
+    public boolean insertUsers(@RequestBody Users users) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String date = df.format(new Date());
 
@@ -90,6 +90,7 @@ public class UsersController {
      * @param users
      * @return
      */
+
     @GetMapping("UsePhoneLogin")
     public Users PhoneLogin(Users users) {
         Users getUser = this.usersService.verifyPhoneLogin(users.getPhone(), users.getPassword());
@@ -125,9 +126,9 @@ public class UsersController {
      *
      * @return
      */
-    @GetMapping("verifyToke")
+    @GetMapping("verifyToken")
     public Boolean checkToken(HttpServletRequest request) {
-        String token = request.getHeader("token");
+        String token = request.getHeader("X-Token");
         return JwtUtil.checkToken(token);
     }
 

@@ -26,7 +26,7 @@ public class OrderController {
 
     //删除订单
     @DeleteMapping("deleteOrder")
-    public boolean deleteOrder(Integer id) {
+    public boolean deleteOrderById(Integer id) {
         return this.orderService.DeleteOrder(id);
     }
 
@@ -39,7 +39,7 @@ public class OrderController {
 
     //修改订单数据
     @PutMapping("updateOrderById")
-    public boolean updateOrder(@RequestBody Order order) {
+    public boolean updateOrderById(@RequestBody Order order) {
         return this.orderService.updateOrderById(order);
     }
 

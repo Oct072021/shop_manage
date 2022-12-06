@@ -38,7 +38,7 @@ public class ShopCartController {
 
     //执行修改
     @PutMapping("updateShopCartId")
-    public boolean updateShopCartId(@RequestBody ShopCart shopCart) {
+    public boolean updateShopCartById(@RequestBody ShopCart shopCart) {
         return this.shopCartService.updateByIdShopCart(shopCart);
     }
 

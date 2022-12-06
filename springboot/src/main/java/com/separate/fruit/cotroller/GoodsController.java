@@ -20,7 +20,6 @@ public class GoodsController {
                                      @RequestBody Goods goods) {
 
         int num = page * size;
-        System.out.println(goods.getGoodsType());
         return this.goodsService.AllGoodsLimit(num, size, goods);
     }
 
@@ -31,19 +30,19 @@ public class GoodsController {
      * @return
      */
     @DeleteMapping("/deleteGoods")
-    public boolean deleteKeyByIdGoods(Integer id) {
+    public boolean deleteKeyGoodsById(Integer id) {
         return this.goodsService.deleteKeyIdGoods(id);
     }
 
     //查询出数据,然后修改商品数据
     @RequestMapping("/findGoods")
-    public Goods findGoods(Integer id) {
+    public Goods findGoodsById(Integer id) {
         return this.goodsService.findGoods(id);
     }
 
     //修改商品数据
     @PutMapping("/updateGoods")
-    public boolean updateGoods(@RequestBody Goods goods) {
+    public boolean updateGoodsById(@RequestBody Goods goods) {
         return this.goodsService.updateGoods(goods);
     }
 

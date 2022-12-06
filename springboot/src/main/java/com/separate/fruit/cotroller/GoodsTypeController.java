@@ -24,17 +24,17 @@ public class GoodsTypeController {
     }
 
     @DeleteMapping("deleteType")
-    public boolean deleteType(Integer id) {
+    public boolean deleteTypeById(Integer id) {
         return this.goodsTypeService.deleteType(id);
     }
 
     @RequestMapping("findByIdType")
-    public GoodsType findByIdType(Integer id) {
+    public GoodsType findTypeById(Integer id) {
         return this.goodsTypeService.FindByIdType(id);
     }
 
     @PutMapping("updateType")
-    public boolean updateType(@RequestBody GoodsType goodsType) {
+    public boolean updateTypeById(@RequestBody GoodsType goodsType) {
         return this.goodsTypeService.updateById(goodsType);
     }
 }
